@@ -62,9 +62,9 @@ print(f"К-сть успішних стартапів з цею категорі
 
 # df[df['funding_total_usd'] >= 100000]['market'].value_counts().nlargest(10).plot(kind='barh')
 # df[df['funding_total_usd'] >= 100000]['category_list'].value_counts().nlargest(10).plot(kind='barh')
-d3 = df[df['seed'] > 0]['funding_rounds']
-d4 = df[df['seed'] <= 0]['funding_rounds']
-d3.plot(kind='barh')
+d3 = df[df['seed'] > 0]['funding_rounds'].nlargest(1)
+d4 = df[df['seed'] <= 0]['funding_rounds'].nlargest(1)
+d3.plot(kind='barh', )
 d4.plot(kind='barh')
 
 plt.show()
