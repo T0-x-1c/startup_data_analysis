@@ -1,18 +1,11 @@
 import pandas as pd
+import matplotlib.pyplot as plt
 
 df = pd.read_csv('investments_VC.csv')
 
 '''очищення данних'''
 
-df = df.drop("permalink", axis=1)
-df = df.drop("name", axis=1)
-df = df.drop("homepage_url", axis=1)
-df = df.drop("region", axis=1)
-df = df.drop("city", axis=1)
-df = df.drop("state_code", axis=1)
-df = df.drop("country_code", axis=1)
-df = df.drop("status", axis=1)
-df = df.drop("founded_quarter", axis=1)
+df = df.drop(["permalink", "name", "homepage_url", "region", "city", "state_code", "country_code", "status", "founded_quarter"], axis=1)
 
 def category_list_normalization(category_list):
     category_list = str(category_list)
@@ -47,5 +40,33 @@ else:
 
 '''які чинники впливають на успіх стартапу'''
 
+#найпопулярніші категорії
+most_popular_category = high_funding['category_list'].value_counts().idxmax()
+most_popular_category_count = high_funding['category_list'].value_counts().max()
+
+# Виведення найпопулярнішого ринку
+most_popular_market = high_funding['market'].value_counts().idxmax()
+most_popular_market_count = high_funding['market'].value_counts().max()
+
+#чи впливає початковий етап фінансування компанії (seed) на успішність
+if df[df['seed'] > 0]['funding_rounds'].mean() > df[df['seed'] <= 0]['funding_rounds'].mean():
+    print('seed впливає')
+else:
+    print('seed не впливає')
+
+print(f"Найпопулярніший ринок: {most_popular_market}")
+print(f"К-сть успішних стартапів на цьому ринку: {most_popular_market_count}")
+
+print(f"Найпопулярніша категорія: {most_popular_category}")
+print(f"К-сть успішних стартапів з цею категорією: {most_popular_category_count}")
+
+# df[df['funding_total_usd'] >= 100000]['market'].value_counts().nlargest(10).plot(kind='barh')
+# df[df['funding_total_usd'] >= 100000]['category_list'].value_counts().nlargest(10).plot(kind='barh')
+d3 = df[df['seed'] > 0]['funding_rounds']
+d4 = df[df['seed'] <= 0]['funding_rounds']
+d3.plot(kind='barh')
+d4.plot(kind='barh')
+
+plt.show()
 df.info()
 df.to_csv("clear_csv.csv")
